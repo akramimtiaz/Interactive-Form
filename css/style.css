@@ -106,6 +106,12 @@ input.invalid {
 	transition: border-color .4s, background-color .4s;
 }
 
+select.invalid {
+	border: 2px solid red;
+	transition: border-color .4s, background-color .4s;
+}
+
+
 button {
 	color: #fff;
 	padding: .55em 1.25em;
