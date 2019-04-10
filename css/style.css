@@ -101,26 +101,6 @@ input[type="radio"] {
 	display: inline-block;
 }
 
-input.invalid {
-	border: 2px solid red;
-	transition: border-color .4s, background-color .4s;
-}
-
-select.invalid {
-	border: 2px solid red;
-	transition: border-color .4s, background-color .4s;
-}
-
-legend.invalid {
-	color: red;
-	transition: color .4s;
-}
-
-label.strike{
-	text-decoration: line-through;
-}
-
-
 button {
 	color: #fff;
 	padding: .55em 1.25em;
@@ -198,4 +178,27 @@ button:hover {
 	.col-6 {
 		width: 49%;
 	}
+}
+
+/* ================================= 
+  My Styling
+==================================== */
+
+input.invalid,
+select.invalid  {
+	border: 2px solid red;
+	transition: border-color .4s, background-color .4s;
+}
+
+legend.invalid {
+	color: red;
+	transition: color .4s;
+}
+
+label.strike{
+	text-decoration: line-through;
+}
+
+#total-cost::before {
+	content: "$";
 }
