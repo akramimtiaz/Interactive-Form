@@ -35,16 +35,6 @@ const validateInput = ($element, regex) => {
     }
 }
 
-const validateName = () => {
-    const regex = /^[A-Za-z]{1}[a-z]+ [A-Za-z]{1}[a-z]+$/;
-    return validateInput($('#name'), regex);
-}
-
-const validateEmail = () => {
-    //regex obtained from www.regular-expressions.info
-    const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return validateInput($('#mail'), regex);
-}
 
 const validateSelectedJob = () => {
     if($('#title').val() === "select_title"){
@@ -82,19 +72,18 @@ const validateSelectedDesign = () => {
         return false;
 
     } else {
+
         removeClassInvalid($('#design'));
+        $('#color option').hide();
+        $('#color option').attr('selected', false);
 
         if(selectedOption === "js puns"){
-            $('#color option').each( function (index) {
-                index === 0 ? $(this).attr('selected', true) : $(this).attr('selected', false);
-                index <= 2 ? $(this).show() : $(this).hide();
-            });
+            $('#color option:eq(0)').attr('selected', true);
+            $('#color option:lt(3)').show();
         } 
         else if (selectedOption === "heart js"){
-            $('#color option').each(function (index){
-                index === 3 ? $(this).attr('selected', true) : $(this).attr('selected', false);
-                index >= 3 ? $(this).show() : $(this).hide();
-            });
+            $('#color option:eq(3)').attr('selected', true);
+            $('#color option:gt(2)').show();
         }
 
         $('#colors-js-puns').show();
@@ -128,23 +117,17 @@ const updateActivityList = (selectedActivity, selectedDate, activitySelected) =>
 
 const validateSelectedActivity = (activity) => {
 
+    $(':checkbox:checked').length > 0 ? removeClassInvalid($('.activities legend')) : addClassInvalid($('.activities legend'));
+
     const activityName = activity.parentNode.textContent;
     const activityCost = parseInt(activityName.slice(activityName.indexOf('$')+1));
     const activityDate = activityName.match(dateRegex) ? activityName.match(dateRegex)[0] : null;
 
     let   currentTotal = parseInt($('#total-cost').text().slice(1));
-    
-    if($(':checkbox:checked').length > 0){
-        $('.activities legend').removeClass('invalid');
-        activity.checked ? currentTotal += activityCost : currentTotal -= activityCost;
-        updateActivityList(activityName, activityDate, activity.checked);
-    } else {
-        $('.activities legend').addClass('invalid');
-        currentTotal = 0;
-        updateActivityList(activityName, activityDate, activity.checked);
-    }
-
+    activity.checked ? currentTotal += activityCost : currentTotal -= activityCost;
     $('#total-cost').text('$'+currentTotal);
+
+    updateActivityList(activityName, activityDate, activity.checked);
 }
 
 const validatePaymentMethod = () => {
@@ -156,7 +139,6 @@ const validatePaymentMethod = () => {
         removeClassInvalid($('#payment'));
         $('fieldset:last > div:eq(0)').show();
 
-        
 
     } else if (paymentMethod === "paypal"){
         removeClassInvalid($('#payment'));
@@ -198,8 +180,16 @@ $('#name').attr('autofocus', true);
 
 $(document).ready(()=>{
 
-    //you could define both regex's as consts here and pass to function
-    //$('#name').on('input', validateInput($(this), nameRegex));
+    let formValid;
+
+    //email regex obtained from www.regular-expressions.info
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    const nameRegex = /^[A-Za-z]{1}[a-z]+ [A-Za-z]{1}[a-z]+$/;
+    
+    const otherJobRegex = /^[A-Za-z ]+$/;
+    const creditCardRegex =  /^\d{13,16}$/;
+    const zipRegex = /^\d{5}$/;
+    const cvvRegex =  /^\d{3}$/;
 
     //hide "Other" input field
     $('#other-title').hide();
@@ -218,21 +208,70 @@ $(document).ready(()=>{
 
 
    
-    
-    $('#name').on('input blur', validateName);
-    $('#mail').on('input blur', validateEmail);
+    //Event Listener for Name Input field
+    $('#name').on('input blur', ()=>{
+        validateInput($('#name'), nameRegex);
+    });
+
+    //Event Listener for Email Input field
+    $('#mail').on('input blur', ()=>{
+        validateInput($('#mail'), emailRegex);
+    });
+
+    //Event Listener for Other Job Input field
+    $('#other-title').on('input blur', ()=>{
+        validateInput($('#other-title'), otherJobRegex);
+    });
+
+    //Event Listener for Job Role Drop-down field
     $('#title').on('input focus', validateSelectedJob);
-    $('#other-title').on('input blur', validateJobRole);
+
+    //Event Listener for Design Drop-down field
     $('#design').on('input focus', validateSelectedDesign);
+
+    //Event Listener for Payment Method Drop-down field
+    $('#payment').on('input focus', validatePaymentMethod);
+
+
+    //Event Listener for Checkboxes attached to Fieldset
     $('.activities').on('change', (e) => {
         validateSelectedActivity(e.target);
     });
-    $('#payment').on('input focus', validatePaymentMethod);
+
+    //Event Listener for Credit Card Input fields attached to Div
     $('#credit-card').on('input', (e) => {
         valCCInfo(e.target.id);
     });
 
-    
+    //Event Listner for when Form is Submitted
+    $('form').on('submit', (e) => {
+        
+        formValid = validateInput($('#name'), nameRegex);
+        formValid = validateInput($('#mail'), emailRegex);
+        formValid = validateSelectedJob();
+        if($('#other-title').is(":visible")){
+            formValid = validateInput($('#other-title'), otherJobRegex);
+        }
+        
 
+        if($(':checkbox:checked').length === 0){
+            $('.activities legend').addClass('invalid');
+            formValid = false;
+        }
+
+        formValid = validateSelectedDesign();
+        
+        
+
+        console.log(formValid);
+        
+        if(!formValid){
+            e.preventDefault();
+        } else {
+            e.preventDefault();
+            alert('Ahlan wa Sahlan bik - Ey!');
+        }
+
+    });
 
 });
