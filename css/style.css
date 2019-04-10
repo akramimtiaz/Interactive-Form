@@ -111,6 +111,15 @@ select.invalid {
 	transition: border-color .4s, background-color .4s;
 }
 
+legend.invalid {
+	color: red;
+	transition: color .4s;
+}
+
+label.strike{
+	text-decoration: line-through;
+}
+
 
 button {
 	color: #fff;
