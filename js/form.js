@@ -247,13 +247,12 @@ $(document).ready(()=>{
         if($('.invalid').length === 0){
             e.preventDefault();
             window.scrollTo(0, 0);
+            
             $('<p>').attr('id', 'submit-success')
                     .text('Your form has been successfully submitted!')
                     .appendTo($('.container header'))
                     .delay(2000).slideUp(500)
-            setTimeout(function(){
-                location.reload();
-            }, 2500);
+            setTimeout(()=>{location.reload();}, 2500);
         }else{
             e.preventDefault();
             window.scrollTo(0, 0);
