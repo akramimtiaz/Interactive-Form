@@ -186,12 +186,23 @@ button:hover {
 
 input.invalid,
 select.invalid  {
-	border: 2px solid red;
+	border: 2px solid rgb(243, 56, 56);
+	transition: border-color .4s, background-color .4s;
+}
+
+input.valid,
+select.valid  {
+	border: 2px solid rgb(193, 238, 156);
 	transition: border-color .4s, background-color .4s;
 }
 
 legend.invalid {
-	color: red;
+	color: rgb(243, 56, 56);
+	transition: color .4s;
+}
+
+legend.valid {
+	color: rgb(193, 238, 156);
 	transition: color .4s;
 }
 
@@ -201,4 +212,22 @@ label.strike{
 
 #total-cost::before {
 	content: "$";
+}
+
+#submit-success {
+	width: 100%;
+	color: rgb(26, 54, 3);
+	background-color: rgb(193, 238, 156);
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+}
+
+#submit-failed {
+	width: 100%;
+	color: rgb(109, 10, 10);
+	background-color: rgb(243, 56, 56);
+	padding-top: 10px;
+	padding-bottom: 10px;
+
 }

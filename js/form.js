@@ -3,17 +3,20 @@
 ***********************************************************************************/
 
 const addClassInvalid = ($element) => {
-    if($element.hasClass('invalid') === false) $element.addClass('invalid');
+    $element.removeClass('valid');
+    $element.addClass('invalid');
 }
 
-const removeClassInvalid = ($element) => {
-    if($element.hasClass('invalid') === true) $element.removeClass('invalid');
+const addClassValid = ($element) => {
+    $element.addClass('valid');
+    $element.removeClass('invalid');
 }
 
+/*Adds/Removes Invalid Class from specified Element if it meets regex requirements*/
 const validateInput = ($element, regex) => {
     const input = $element.val();
     if(regex.test(input) === true){
-        removeClassInvalid($element);
+        addClassValid($element);
     } else {
         addClassInvalid($element);
     }
@@ -24,7 +27,7 @@ const validateSelectedJob = () => {
 
     const selectedRole = $('#title').val();
 
-    selectedRole === "select_title" ? addClassInvalid($('#title')) : removeClassInvalid($('#title'));
+    selectedRole === "select_title" ? addClassInvalid($('#title')) : addClassValid($('#title'));
     selectedRole === "other" ? $('#other-title').show() : $('#other-title').hide();
    
 }
@@ -40,7 +43,7 @@ const validateSelectedDesign = () => {
 
     } else {
 
-        removeClassInvalid($('#design'));
+        addClassValid($('#design'));
         $('#color option').hide();
         $('#color option').attr('selected', false);
 
@@ -84,7 +87,7 @@ const updateActivityList = (selectedActivityName, selectedActivityDate, selected
 
 const validateSelectedActivity = ($activity) => {
 
-    $(':checkbox:checked').length > 0 ? removeClassInvalid($('.activities legend')) : addClassInvalid($('.activities legend'));
+    $(':checkbox:checked').length === 0 ? addClassInvalid($('.activities legend')) : addClassValid($('.activities legend'));
 
     if($activity !== null){
         const activityName = $activity.parent().text();
@@ -102,7 +105,7 @@ const validateSelectedActivity = ($activity) => {
 const validatePaymentMethod = () => {
 
     const paymentMethod = $('#payment').val();
-    paymentMethod === "select_method" ? addClassInvalid($('#payment')) :  removeClassInvalid($('#payment'));
+    paymentMethod === "select_method" ? addClassInvalid($('#payment')) :  addClassValid($('#payment'));
     $('fieldset:last > div').hide();
 
     if(paymentMethod === "credit card"){
@@ -113,19 +116,20 @@ const validatePaymentMethod = () => {
 
     } else if (paymentMethod === "bitcoin"){
         $('fieldset:last > div:eq(2)').show();
-
-    } else { //paymentMethod === "select_method"
-        $('fieldset:last > div').hide();
     }
 }
 
-const valCCInfo = (field) => {
+const validateCreditCard = (field) => {
     const creditCardRegex = /^\d{13,16}$/;
     const zipRegex = /^\d{5}$/;
     const cvvRegex = /^\d{3}$/;
 
     if(field === "cc-num"){
-        return validateInput($('#cc-num'), creditCardRegex);
+        validateInput($('#cc-num'), creditCardRegex);
+        if($('#cc-num').hasClass('invalid') && $('#cc-num').val() === ""){
+            
+        }
+        
     } else if (field === "zip"){
         return validateInput($('#zip'), zipRegex);
     } else if (field === "cvv"){
@@ -140,8 +144,6 @@ $('#name').attr('autofocus', true);
 
 
 $(document).ready(()=>{
-
-    let formValid;
 
     //email regex obtained from www.regular-expressions.info
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -197,14 +199,13 @@ $(document).ready(()=>{
         validateSelectedActivity($(e.target));
     });
 
-    //Event Listener for Credit Card Input fields attached to Div
-    $('#credit-card').on('input blur', (e) => {
-        valCCInfo(e.target.id);
+    //Event Listener for Credit Card Input fields
+    $('#credit-card input').on('input blur', (e) => {
+        validateCreditCard(e.target.id);
     });
 
     //Event Listner for when Form is Submitted
     $('form').on('submit', (e) => {
-        
         
         validateInput($('#name'), nameRegex);
         validateInput($('#mail'), emailRegex);
@@ -216,7 +217,7 @@ $(document).ready(()=>{
         if($('#other-title').is(":visible")){
             validateInput($('#other-title'), otherJobRegex);
         }else{
-            removeClassInvalid($('#other-title'));
+            addClassValid($('#other-title'));
         }
 
         if($('#payment').val() === "credit card"){
@@ -224,13 +225,26 @@ $(document).ready(()=>{
             validateInput($('#zip'), zipRegex);
             validateInput($('#cvv'), cvvRegex);
         } else {
-            removeClassInvalid($('#credit-card input'));
+            addClassValid($('#credit-card input'));
         }
 
         if($('.invalid').length === 0){
-            alert('Form has been successfully submitted!');
+            e.preventDefault();
+            window.scrollTo(0, 0);
+            $('<p>').attr('id', 'submit-success')
+                    .text('Your form has been successfully submitted!')
+                    .appendTo($('.container header'))
+                    .delay(2000).slideUp(500)
+            setTimeout(function(){
+                location.reload();
+            }, 2500);
         }else{
             e.preventDefault();
+            window.scrollTo(0, 0);
+            $('<p>').attr('id', 'submit-failed')
+            .text('Please ensure all fields have been filled')
+            .appendTo($('.container header'))
+            .delay(2000).slideUp(500)
         }
         
 
