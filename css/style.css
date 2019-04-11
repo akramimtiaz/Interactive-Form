@@ -14,8 +14,8 @@ button {
 
 body {
   font: 1em/1.5;
-  color: #184f68;
-	background: #accbd9;
+  color: black;
+	background: white;
 }
 
 header {
@@ -38,7 +38,8 @@ a {
 
 form {
 	padding: .875em 1.875em 1.875em;
-	background: #85b5ca;
+	border-radius: 1em;
+	background: #E6E8E6;
 }
 
 fieldset,
@@ -60,7 +61,7 @@ button {
 legend {
 	font-weight: 500;
 	padding-top: .5em;
-	border-top: 2px solid #679cb3;
+	border-top: 2px solid #E8A112;
 	margin-bottom: 1.125em;
 }
 
@@ -85,14 +86,14 @@ input {
 	font-size: 1em;
 	font-weight: 500;
 	padding: .8em;
-	background: #c1deeb;
-	border: 2px solid #c1deeb;
+	background: #FCF6E9;
+	border: 2px solid #F6DCA8;
 	outline: none;
 }
 
 input:focus {
-	background: #fff;
-	border-color: #5e97b0;
+	background: #FCF6E9;
+	border-color: #F6DCA8;
 	transition: border-color .4s, background-color .4s;
 }
 
@@ -104,13 +105,13 @@ input[type="radio"] {
 button {
 	color: #fff;
 	padding: .55em 1.25em;
-	background: #22627e;
+	background: #EAA927;
 	margin: 1.25em 0 .5em;
 	cursor: pointer;
 }
 
 button:hover {
-	background: #184c62;
+	background: #E8A112;
 }
 
 /* ================================= 
@@ -187,13 +188,13 @@ button:hover {
 input.invalid,
 select.invalid  {
 	border: 2px solid rgb(243, 56, 56);
-	transition: border-color .4s, background-color .4s;
+	transition: border-color .4s;
 }
 
 input.valid,
 select.valid  {
 	border: 2px solid rgb(193, 238, 156);
-	transition: border-color .4s, background-color .4s;
+	transition: border-color .4s;
 }
 
 legend.invalid {
