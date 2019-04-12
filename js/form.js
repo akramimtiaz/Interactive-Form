@@ -3,6 +3,10 @@
 ***********************************************************************************/
 
 const dateRegex = /\w{6,9} \d{1,2}(am|pm)-\d{1,2}(am|pm)/g;
+const emptyFieldErrorMessage = "Empty Field";
+const creditCardErrorMsg = "13-16 Digits";
+const zipErrorMsg = "5 Digits";
+const cvvErrorMsg = "3 Digits";
 
 const addClassInvalid = ($element) => {
     $element.removeClass('valid');
@@ -15,14 +19,40 @@ const addClassValid = ($element) => {
 }
 
 /*Adds/Removes Invalid Class from specified Element if it meets regex requirements*/
-const validateInput = ($element, regex) => {
+// const validateInput = ($element, regex) => {
+//     const input = $element.val();
+//     if(regex.test(input) === true){
+//         addClassValid($element);
+//     } else {
+//         addClassInvalid($element);
+//     }
+// }
+
+
+const validateInput = ($element, regex, formatErrorMessage) => {
+    
     const input = $element.val();
+
+    $(`label[for="${$element.attr('id')}"] > span`).remove();
+    const $errorMsg = $('<span>').addClass('error').hide();
+
+    $errorMsg.appendTo($(`label[for="${$element.attr('id')}"]`));
+
     if(regex.test(input) === true){
         addClassValid($element);
+        $errorMsg.hide();
     } else {
         addClassInvalid($element);
+        $errorMsg.show();
+        if(input === ""){
+            $errorMsg.text(emptyFieldErrorMessage);
+        } else {
+            $errorMsg.text(formatErrorMessage);
+        }
     }
+    
 }
+
 
 
 const validateSelectedJob = () => {
@@ -141,15 +171,11 @@ const validateCreditCard = (field) => {
     const cvvRegex = /^\d{3}$/;
 
     if(field === "cc-num"){
-        validateInput($('#cc-num'), creditCardRegex);
-        if($('#cc-num').hasClass('invalid') && $('#cc-num').val() === ""){
-
-        }
-        
+        validateInput($('#cc-num'), creditCardRegex, creditCardErrorMsg);
     } else if (field === "zip"){
-        return validateInput($('#zip'), zipRegex);
+        return validateInput($('#zip'), zipRegex, zipErrorMsg);
     } else if (field === "cvv"){
-        return validateInput($('#cvv'), cvvRegex);
+        return validateInput($('#cvv'), cvvRegex, cvvErrorMsg);
     }
     
 }
@@ -170,6 +196,13 @@ $(document).ready(()=>{
     const zipRegex = /^\d{5}$/;
     const cvvRegex =  /^\d{3}$/;
 
+    //error messages for the respective input fields
+    const nameErrorMsg = "Please enter a valid name";
+    const emailErrorMsg = "Please enter a valid email";
+    const otherJobErrorMsg = "Please enter a valid role";
+    
+
+
     //hide "Other" input field
     $('#other-title').hide();
 
@@ -187,17 +220,17 @@ $(document).ready(()=>{
 
     //Event Listener for Name Input field
     $('#name').on('input blur', ()=>{
-        validateInput($('#name'), nameRegex);
+        validateInput($('#name'), nameRegex, nameErrorMsg);
     });
 
     //Event Listener for Email Input field
     $('#mail').on('input blur', (e)=>{
-        validateInput($('#mail'), emailRegex);
+        validateInput($('#mail'), emailRegex, emailErrorMsg);
     });
 
     //Event Listener for Other Job Input field
     $('#other-title').on('input blur', ()=>{
-        validateInput($('#other-title'), otherJobRegex);
+        validateInput($('#other-title'), otherJobRegex, otherJobErrorMsg);
     });
 
     //Event Listener for Job Role Drop-down field
@@ -223,23 +256,25 @@ $(document).ready(()=>{
     //Event Listner for when Form is Submitted
     $('form').on('submit', (e) => {
         
-        validateInput($('#name'), nameRegex);
-        validateInput($('#mail'), emailRegex);
+        validateInput($('#name'), nameRegex, nameErrorMsg);
+        validateInput($('#mail'), emailRegex, emailErrorMsg);
         validateSelectedJob();
         validateSelectedDesign();
+        /*MODIFY THIS LINE TO JUST THE IF STATMEMENT
+        REMOVE THE IF NULL FROM THE FUNCTION */
         validateSelectedActivity(null);
         validatePaymentMethod();
 
         if($('#other-title').is(":visible")){
-            validateInput($('#other-title'), otherJobRegex);
+            validateInput($('#other-title'), otherJobRegex, otherJobErrorMsg);
         }else{
             addClassValid($('#other-title'));
         }
 
         if($('#payment').val() === "credit card"){
-            validateInput($('#cc-num'), creditCardRegex);
-            validateInput($('#zip'), zipRegex);
-            validateInput($('#cvv'), cvvRegex);
+            validateInput($('#cc-num'), creditCardRegex, creditCardErrorMsg);
+            validateInput($('#zip'), zipRegex, zipErrorMsg);
+            validateInput($('#cvv'), cvvRegex, cvvErrorMsg);
         } else {
             addClassValid($('#credit-card input'));
         }

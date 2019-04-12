@@ -211,6 +211,12 @@ label.strike{
 	text-decoration: line-through;
 }
 
+span.error {
+	font-size: .8em;
+	float: right;
+	color: rgb(243, 56, 56);
+}
+
 #total-cost::before {
 	content: "$";
 }
