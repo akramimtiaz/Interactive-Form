@@ -2,8 +2,8 @@
 
 Aiming for exceeded expectations. This project involved the use of JQuery to enhance an interactive registration form. 
 
-1. Name field - autofocus enabled, cannot be blank and must be in the format of 'First Last or first last' 
-                e.g. Dave McFarland or dave mcfarland
+1. Name field - autofocus enabled, cannot be blank and must be in the format of 'First Last' or 'first last' 
+                e.g. 'Dave McFarland' or 'dave mcfarland'
 2. Email field - cannot be blank and must in a valid email format
 3. Job Title field - added default option of 'Select Title', selection cannot be 'Select Title' and if 'Other' is specified the
                      'Other' input field must be filled
