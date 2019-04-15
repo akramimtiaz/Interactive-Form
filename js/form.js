@@ -200,7 +200,7 @@ const validateCreditCard = (field) => {
 
 
 //Set focus to the Name Input field when the page loads
-$('#name').attr('autofocus', true);
+$('#name').focus();
 
 
 $(document).ready(()=>{
