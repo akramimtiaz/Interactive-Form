@@ -1,5 +1,7 @@
 # techdegree-project-3
 
+This project involves the use of JavaScript to enhance an interactive registration form for a fictional conference called "FullStack Conf." The jQuery library was used to complete this project.
+
 Aiming for exceeded expectations. This project involved the use of JQuery to enhance an interactive registration form. 
 
 1. Name field - autofocus enabled, cannot be blank and must be in the format of 'First Last' or 'first last' 
